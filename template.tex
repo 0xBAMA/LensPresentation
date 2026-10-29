@@ -1,0 +1,345 @@
+\documentclass[12pt, letterpaper, landscape]{article}
+
+% ==================================================
+% PACKAGES
+% ==================================================
+\usepackage[margin=0.8in]{geometry}
+\usepackage{xcolor}
+\usepackage{pagecolor}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{eso-pic}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% ==================================================
+% PAGE COLORS
+% ==================================================
+\definecolor{pagebg}{HTML}{000000}
+\definecolor{textwhite}{HTML}{FFFFFF}
+
+\pagecolor{pagebg}
+\color{textwhite}
+
+% ==================================================
+% CODE COLORS
+% ==================================================
+\definecolor{codebg}{HTML}{181818}
+\definecolor{codegreen}{HTML}{98C379}
+\definecolor{codegray}{HTML}{808080}
+\definecolor{codepurple}{HTML}{C678DD}
+\definecolor{codeblue}{HTML}{61AFEF}
+\definecolor{codewhite}{HTML}{ABB2BF}
+\definecolor{codemagenta}{HTML}{E06C75}
+
+% ==================================================
+% CODE LISTING STYLE
+% ==================================================
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\footnotesize\color{codewhite},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    stringstyle=\color{codepurple},
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{codegray},
+    framerule=0.3pt,
+    captionpos=b,
+    xleftmargin=1.5em,
+    framexleftmargin=1em,
+    framesep=6pt,
+    columns=fullflexible,
+    upquote=true
+}
+
+\lstset{style=mystyle}
+
+% ==================================================
+% BULLET STYLE
+% ==================================================
+\setlist[itemize]{
+    label=\textcolor{textwhite}{\textbullet},
+    leftmargin=2em,
+    itemsep=0.5em,
+    topsep=0.5em
+}
+
+% ==================================================
+% REUSABLE PAGE HEADING
+% ==================================================
+\newcommand{\newnotepage}[1]{
+    \clearpage
+    \noindent{\LARGE\bfseries #1}\par
+    \vspace{0.5em}
+    \noindent\rule{\textwidth}{0.5pt}
+    \vspace{1em}
+}
+
+% ==================================================
+% IMAGE HELPER
+%
+% Usage:
+% \notegraphic{width}{path/to/image.png}
+%
+% If the image is missing, a placeholder is shown
+% so the template can still compile.
+% ==================================================
+\newcommand{\notegraphic}[2]{%
+    \IfFileExists{#2}{%
+        \includegraphics[width=#1]{#2}%
+    }{%
+        \fcolorbox{codegray}{codebg}{%
+            \parbox[c][3cm][c]{%
+                \dimexpr#1-2\fboxsep-2\fboxrule\relax
+            }{%
+                \centering\color{textwhite}\small
+                Image placeholder\\[0.5em]
+                \texttt{\detokenize{#2}}%
+            }%
+        }%
+    }%
+}
+
+% ==================================================
+% DOCUMENT
+% ==================================================
+\begin{document}
+
+
+% Title page goes here
+\thispagestyle{empty}
+\vspace*{\fill}
+\thispagestyle{empty}
+\thispagestyle{empty}
+\AddToShipoutPictureBG*{%
+    \AtPageLowerLeft{%
+        \put(0,0){%
+            \makebox(0,0)[lb]{%
+                \color{black}%
+                \rule{\paperwidth}{\paperheight}%
+            }%
+        }%
+        \put(\LenToUnit{0.5\paperwidth},%
+             \LenToUnit{0.5\paperheight}){%
+            \makebox(0,0){%
+                \includegraphics[
+                    width=\paperwidth,
+                    height=\paperheight,
+                    keepaspectratio
+                ]{test.png}%
+            }%
+        }%
+    }%
+}
+\vspace*{\fill}
+\begin{center}
+    {\Huge\bfseries My Notes Title\par}
+    \vspace{1cm}
+    {\Large Subtitle or Topic\par}
+    \vspace{2cm}
+    {\large October 2026\par}
+\end{center}
+\vspace*{\fill}
+\clearpage
+
+
+
+% ==================================================
+% PAGE 1: BASIC NOTES AND CODE
+% ==================================================
+\newnotepage{Basic Notes}
+
+\begin{itemize}
+    \item A normal bullet point.
+
+    \item Inline subscripts: $x_1$, $V_{\text{out}}$,
+    and $a_{n+1}$.
+
+    \item An equation:
+    \[
+        E = mc^2
+    \]
+
+    \item Code can be inserted directly into the document.
+\end{itemize}
+
+\textbf{Example C++ code:}
+
+\begin{lstlisting}[language=C++]
+#include <iostream>
+
+int main() {
+    float x = 3.14f;
+    std::cout << "Hello, world!" << std::endl;
+    return 0;
+}
+\end{lstlisting}
+
+
+% ==================================================
+% PAGE 2: IMAGE ON THE RIGHT
+% Text and bullets flow around the image.
+% ==================================================
+\newnotepage{Image on the Right}
+
+\begin{wrapfigure}{r}{0.38\textwidth}
+    \centering
+    \notegraphic{0.36\textwidth}{images/diagram.png}
+    \caption{Example diagram}
+\end{wrapfigure}
+
+\begin{itemize}
+    \item This bullet demonstrates text wrapping beside
+    an image. Add enough text to see how the lines use
+    the available space to the left of the figure.
+
+    \item The image occupies the right side of the page.
+    As the text passes the bottom of the image, it can
+    use the full text width again.
+
+    \item Inline equations work here too:
+    $x_{n+1} = x_n + \Delta x$.
+
+    \item Additional notes can follow the image.
+\end{itemize}
+
+
+% ==================================================
+% PAGE 3: IMAGE ON THE LEFT
+% ==================================================
+\newnotepage{Image on the Left}
+
+\begin{wrapfigure}{l}{0.38\textwidth}
+    \centering
+    \notegraphic{0.36\textwidth}{images/splat.png}
+    \caption{Example rendering}
+\end{wrapfigure}
+
+\begin{itemize}
+    \item Use the left-hand layout to place an image
+    alongside a description.
+
+    \item This is useful for diagrams, screenshots,
+    rendering results, or illustrations.
+
+    \item Text can continue beneath the image after
+    reaching the bottom edge of the figure.
+
+    \item The figure width can be changed by editing
+    the width arguments above.
+\end{itemize}
+
+
+% ==================================================
+% PAGE 4: IMAGE BESIDE CODE
+%
+% Listings do not reliably wrap around wrapfigure.
+% Use minipage to create two columns instead.
+% ==================================================
+\newnotepage{Code Beside an Image}
+
+\textbf{Code example:}
+
+\vspace{0.5em}
+
+\noindent
+\begin{minipage}[t]{0.57\textwidth}
+    \vspace{0pt}
+    \begin{lstlisting}[language=C++]
+void update(float dt) {
+    position += velocity * dt;
+    velocity += acceleration * dt;
+}
+    \end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.37\textwidth}
+    \vspace{0pt}
+    \centering
+    \notegraphic{\linewidth}{images/code-diagram.png}
+    \captionof{figure}{Update process}
+\end{minipage}
+
+\vspace{1em}
+
+\begin{itemize}
+    \item The code and image occupy separate columns.
+
+    \item Change the minipage widths to control the
+    relative amount of space each element receives.
+\end{itemize}
+
+
+% ==================================================
+% PAGE 5: REGULAR CENTERED FIGURE
+% ==================================================
+\newnotepage{Standalone Figure}
+
+\begin{figure}[htbp]
+    \centering
+    \notegraphic{0.7\textwidth}{images/overview.png}
+    \caption{Overview diagram}
+\end{figure}
+
+\begin{itemize}
+    \item Use a standalone figure when the image deserves
+    most of the page width.
+
+    \item Figures may float to a different position
+    when LaTeX lays out the page.
+\end{itemize}
+
+
+% ==================================================
+% PAGE 6: MIXED NOTES, FIGURES, AND CODE
+% ==================================================
+\newnotepage{Mixed Technical Notes}
+
+\textbf{Observation}
+
+The output depends on the input parameters
+$a$, $b$, and $c$. In particular,
+
+\[
+    f(x) = \sum_{i=0}^{n} a_i x^i
+\]
+
+\begin{wrapfigure}{r}{0.34\textwidth}
+    \centering
+    \notegraphic{0.32\textwidth}{images/result.png}
+    \caption{Result}
+\end{wrapfigure}
+
+\begin{itemize}
+    \item The figure shows a representative result.
+
+    \item The algorithm evaluates the polynomial.
+
+    \item The output can be compared against the
+    expected value.
+\end{itemize}
+
+\textbf{Implementation:}
+
+\begin{lstlisting}[language=C++]
+float evaluate(float x) {
+    return a * x * x + b * x + c;
+}
+\end{lstlisting}
+
+\end{document}
