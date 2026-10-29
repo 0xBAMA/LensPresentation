@@ -206,4 +206,40 @@
     \end{figure}
 \end{itemize}
 
+\newnotepage{Abbe Number and Cauchy Coefficients}
+\begin{wrapfigure}{r}{0.32\textwidth}
+    \centering
+    \notegraphic{0.3\textwidth}{lens/abbe.png}
+    \text{Ernst Abbe (1840-1905)}
+\end{wrapfigure}
+
+\begin{itemize}
+    \item {\large It's important to have an expression for this behavior, if we want to be able to use it for a real application like an optical system - relevant for describing different types of glass, fluids, or atmospheric gasses}
+    \item {\large Framework for describing this property came from Ernst Abbe in the mid-to-late 1800s, defining the index and Abbe number of optical glass}
+    \begin{itemize}
+        \item {\large These are defined at reference wavelengths of light - specific emission bands from luminous gas discharge provide a frequency reference that can be used to test a sample of a given material}
+    \end{itemize}
+    \item {\large The Cauchy Eqauation is from somewhat earlier, in 1830}
+    \begin{itemize}
+        \item {\large The most useful expression for our use here is the two term form}
+        \[
+            n(\lambda) = A + B/(\lambda^2)
+        \]
+    \end{itemize}
+
+    \item {\large It is possible to derive the Cauchy Equation coefficients A and B corresponding to a given IoR and Abbe number, by this relation given by LuxCoreRender (using the d-, F-, and C-wavelength definitions):}
+    \[
+            B = \frac{ n_{d} - 1 }{ v_{d} } * \frac{ F^2 C^2 }{ C^2 - F^2 } = \frac{n_{d} - 1}{v_{d}} * 0.52
+    \]
+    \[
+            A = n_{d} - B * 2.897      \;\;\;\;or\;\;\;\;     A = n_{e} - B * 3.354
+    \]
+    \item {\large They go on to explain that the difference between the two definitions is less than 0.05\% over the visible spectrum of light, and that the difference between using Cauchy and the more math-heavy Sellmeier Equation is similarly negligible}
+\end{itemize}
+
+\newnotepage{Abbe Diagram - The Glass Veil}
+\begin{itemize}
+    \item {\large Different}
+\end{itemize}
+
 \end{document}
