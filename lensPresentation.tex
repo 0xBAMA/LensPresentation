@@ -13,6 +13,7 @@
 \usepackage{caption}
 \usepackage{amsmath}
 \usepackage{eso-pic}
+\usepackage{dirtytalk} % for \say{}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
@@ -158,7 +159,7 @@
     {\large October 30, 2026\par}
     \vspace{1cm}
     {\Large Jon Baker (jb)\par}
-    {\large twitter: @jbaker\_graphics, bsky: @jbakergraphics\par}
+    {\large twitter: @jbaker\_graphics / bsky: @jbakergraphics\par}
     {\large project blog: https://jbaker.graphics/}
 \color{textwhite}
 \end{center}
@@ -212,8 +213,8 @@
     \item {\large This gives rise to another interpretation based on wave optics... pulses of incident energy arrive at some rate, and the bending ocurrs as a result, because they share phase at the boundary}
     \item {\large The specifics here are a little bit out of scope, but we can say that this is a phenomenon that changes with the rate of the pulses ariving at the interface}
     \begin{itemize}
-        \item {\large "Rate" here refers to the frequency of the incident light - this property corresponds to its color, as it is proportionally related to the wavelength of the light by the constant speed of light C}
-        \item {\large This variation of IoR with respect to frequency is referred to as "Dispersion", and it is a key concept in optical systems - it is the same phenomenon that is depicted on the cover of Dark Side of the Moon, and which gives rise to rainbows when it ocurrs inside of water droplets in the atmosphere}
+        \item {\large \say{Rate} here refers to the frequency of the incident light - this property corresponds to its color, as it is proportionally related to the wavelength of the light by the constant speed of light C}
+        \item {\large This variation of IoR with respect to frequency is referred to as \say{Dispersion}, and it is a key concept in optical systems - it is the same phenomenon that is depicted on the cover of Dark Side of the Moon, and which gives rise to rainbows when it ocurrs inside of water droplets in the atmosphere}
     \end{itemize}
     \begin{figure}[htbp]
     \centering
@@ -256,7 +257,7 @@
 % =4=================================================
 \newnotepage{Abbe Diagram - The Glass Veil}
 \begin{itemize}
-    \item {\large Different chemical forumulations are used to control the refractive index and dispersion of engineered glasses}
+    \item {\large Different chemical formulations are used to control the refractive index and dispersion of engineered glasses}
 	\item {\large You can visualize these properties on a 2D plot, which is called an Abbe Diagram, or the Glass Veil}
 	\begin{figure}[htbp]
     \centering
@@ -273,14 +274,14 @@
 \begin{itemize}
 	\item {\large The term is probably more familiar from the opthamology field, the same is term is used here to describe a specification of a lens system}
 	\item {\large This is an example fisheye design from Warren J. Smith's book Modern Optical Engineering}
-	\item {\large Each line item is "an interface" in the system}
+	\item {\large Each line item is \say{an interface} in the system}
 	\item {\large The parameters can be put in two categories}
 	\begin{itemize}
 		\item {\large Material Properties}
 		\begin{itemize}
 			\item {\large Index (IoR)}
 			\item {\large Abbe number (often labeled $V_{\text{no}}$)}
-			\item {\large Usually a code for a type of glass that fulfills this requirement, or "air" for air gaps}
+			\item {\large Usually a code for a type of glass that fulfills this requirement, or \say{air} for air gaps}
 		\end{itemize}
 		\item {\large Geometric Properties}
 		\begin{itemize}
@@ -296,7 +297,8 @@
 \begin{wrapfigure}{r}{0.46\textwidth}
     \centering
     \notegraphic{0.42\textwidth}{lens/sonnar.png}
-	\text{Showing agreement between my 2D pathtracer and the reference}
+	\text{Showing agreement between my 2D pathtracer and the}
+	\text{reference diagram in Modern Optical Engineering}
 \end{wrapfigure}
 \begin{itemize}
 	\item {\large Sectioned views like this are taking advantage of the radial symmetry of the system}
@@ -305,6 +307,8 @@
 		\item {\large An element is a piece of glass that can be manufactured, as a building block of a system like this - the surfaces can be ground into concave, planar, or convex profiles, with spherical or aspherical curvature}
 		\item {\large A group is one or more elements grouped within the system - this can include things like cemented doublets and triplets, which are simple elements which are glued together with a material with properties such that it acts like a glass-glass interface}
 	\end{itemize}
+	\item {\large \say{Optical Space}/\say{Camera Space} here is defined with Z going left-to-right, the film plane centered at the origin, offset backwards along the Z-axis by the total system thickness - the center of the front element is located at the origin}
+	\item {\large We provide as much information in 2D as 3D, in this sectioned drawing, again radial symmetry}
 \end{itemize}
 
 % =7=================================================
@@ -316,7 +320,7 @@
 \begin{itemize}
 	\item {\large Iterating through the table, we're assigning boolean space occupancy to each interface in the table}
 	\begin{itemize}
-		\item {\large 0 means "air", 1 means "glass"}
+		\item {\large 0 means \say{air}, 1 means \say{glass}}
 	\end{itemize}
 	\item {\large We can assign a 2-bit code to each interface, which gives us 4 possible values}
 	\begin{itemize}
@@ -334,7 +338,7 @@
 % =8=================================================
 \newnotepage{Tracing a Ray through the System}
 \begin{itemize}
-	\item {\large What is a "valid ray"? We're using a somewhat simplified model}
+	\item {\large What is a \say{valid ray}? We're using a somewhat simplified model}
 	\begin{itemize}
 		\item {\large Starts at the film plane, with an associated wavelength, on the far right of our diagrams}
 		\item {\large Visits each element, in order, performing the correct wavelength-dependent refraction using the Cauchy coefficients of the materials on either side of the interface}
@@ -358,8 +362,8 @@
 	\item {\large In order to resolve the correct image at the film plane, you need to integrate all the radiance at the pupil - this is equivalently the incident radiance at the film plane (for our purposes)}
 	\item {\large This graphic, from Physically Based Ray Tracing v3's Realistic Cameras chapter, shows a view of the system pupil from two distinct points on the film plane}
 	\begin{itemize}
-		\item {\large Somewhat counterintuitively, the one which is solid orange color is "in focus", as the incident radiance is uniform - we integrate, and get orange for this point on the film}
-		\item {\large The green one where the pupil sees distinct leaves will need to integrate varying frequency image contents - when we perform the integration, it constitutes a blurring, and we see this as an "out of focus" portion of the image}
+		\item {\large Somewhat counterintuitively, the one which is solid orange color is \say{in focus}, as the incident radiance is uniform - we integrate, and get orange for this point on the film}
+		\item {\large The green one where the pupil sees distinct leaves will need to integrate varying frequency image contents - when we perform the integration, it constitutes a blurring, and we see this as an \say{out of focus} portion of the image}
 	\end{itemize}
 	\item {\large We need an efficient way to sample this pupil radiance - when we do this integration for all points on the film, the result is the lens image that we want to resolve}
 \end{itemize}
@@ -372,10 +376,10 @@
 \end{wrapfigure}
 \begin{itemize}
 	\item {\large At render time, starting from the film plane, we need a way to generate rays that will pass through the exit pupil of the lens}
-	\item {\large In the image to the right, this graphic is drawing all ray paths, starting at the film plane on the right and traced as far as they continue through the lens system - those arriving at the left hand side are considered "valid", and have made it through the system... note how small a subset this is, of the total rays drawn}
+	\item {\large In the image to the right, this debug tool is drawing all ray paths starting at the film plane on the right and traced as far as they continue through the lens system - those rays arriving at the left hand side are considered \say{valid}, and have made it through the system... the point is that we want to note how small a subset this is, of the total rays drawn}
 	\item {\large Some sampling strategies, motivating our approach:}
 	\begin{itemize}
-		\item {\large Hemisphere Sampling - generate random directions in the hemisphere normal to the film plane... this can be $<$1\% efficiency, with very few rays making it the exit pupil}
+		\item {\large Hemisphere Sampling - generate random directions in the hemisphere normal to the film plane... this can be $<$1\% efficiency, with very few rays making it the exit pupil... we can do better}
 		\item {\large Rear Element Sampling - generating random directions based on the vector from the flim plane to random points generated on the rearmost element of the system... this is more efficient than hemisphere sampling, and it is a much more efficient starting point}
 		\item {\large Pupil Sampling - if we can, for example, put a bounding box around the exit pupil, and generate uniform samples in that box... it's a good starting point for sampling the image, and the rate of successful rays generated this way is approximately the ratio of the areas of a circle inside a square, $\frac{\pi}{4}$}
 		\item {\large Importance Sampling of Pupil Radiance - this is still in the works in my pathtracer, Phoenix, but if we can accumulate some LUT of the pupil's radiance distribution, it will be able to resolve both a more efficient and a much more correct result... more about this in the discussion section at the end}
@@ -383,39 +387,92 @@
 \end{itemize}
 
 % =11================================================
-\newnotepage{"Normalized Rear Element Coordinates"}
+\newnotepage{\say{Normalized Rear Element Coordinates}}
+\begin{wrapfigure}{r}{0.4\textwidth}
+    \centering
+    \notegraphic{0.38\textwidth}{lens/rearelement.png}
+\end{wrapfigure}
 \begin{itemize}
-	\item {\large }
+	\item {\large How do we define that bounding box? We need to define a space to operate in - inspired by LCRS' project Lensform}
+	\item {\large Why is rear element sampling valid as a starting point?}
+	\begin{itemize}
+		\item {\large In order to arrive at the film, you must necessarily pass through the rear element of the system}
+		\item {\large In a light-sealed system (like most cameras), this is the aperture through which all light incident at the film plane must pass}
+		\item {\large Another way to say this - we will never recieve any light from any direction besides one which originates inside this rear element aperture}
+	\end{itemize}
+	\item {\large This defines our problem... we can place a plane at the Z-axis location of the rear element, and on that plane, define a normalized space that spans -1 to 1 across the rear element aperture - I call this \say{Normalized Rear Element Coordinates}}
+	\item {\large Great! Now we have a simple, scale-invariant 2D space to work in (we don't care about changes to the lens parameters, if we need to convert to points in 3D space, we'll just reference the current parameters for the rear element of the system)}
 \end{itemize}
 
 % =12================================================
 \newnotepage{Creating Sampling Rays}
+\begin{wrapfigure}{r}{0.4\textwidth}
+    \centering
+    \notegraphic{0.38\textwidth}{lens/LUTmapping.png}
+\end{wrapfigure}
 \begin{itemize}
-	\item {\large }
+	\item {\large At this point we've defined everything we need to guide the pupil sampling, it's just putting it together}
+	\item {\large We want to establish a bounding box for the system pupil in Normalized Rear Element Coords, and then use that bounding box at runtime to guide our generation of sample rays}
+	\begin{itemize}
+		\item {\large Unfortunately, this set of bounds is not uniform for the entire film plane}
+		\item {\large We are lucky, though, in particular, because of the radial symmetry of the system that we mentioned earlier}
+	\end{itemize}
+	\item {\large Ultimately what we need is a 1D LUT containing sampling information, which we index into using the distance from the center of the film plane}
+	\item {\large Each LUT entry needs to be precomputed, upon any change to the lens system, film size, or focus offset, to store min and max on X and Y in our sampling space that can generate valid rays... I'll discuss consequences of the uniform sampling scheme at the end}
+	\item {\large The LUT resolution is allocated with the first entry applying to 0 distance from the center, to entry N at the corner distance (this is the maximum possible displacement on the image)}
 \end{itemize}
 
 % =13================================================
 \newnotepage{Precomputing the LUT}
+\begin{wrapfigure}{r}{0.4\textwidth}
+    \centering
+    \notegraphic{0.38\textwidth}{lens/rearelementLUT.png}
+\end{wrapfigure}
 \begin{itemize}
-	\item {\large }
+	\item {\large How do we calculate these bounds, and how are they used to generate ray samples? How is the radial symmetry of the system harnessed?}
+	\item {\large Precompute step is less than 10ms to fire \say{a few million} rays (your mileage may vary), which allows for UI interactivity of all system parameters}
+	\begin{itemize}
+		\item {\large Each LUT entry's values are established starting at a point up the Y axis - this is the representative source point on the film for that LUT entry}
+		\item {\large The R2 low-discrepancy sequence is used to generate points in Normalized Rear Element Coords... sample rays are from the point on the film, to the point on the rear element, normalized}
+		\item {\large Trace each of these rays through the system, as described earlier, and break out of traversal if you violate any of the \say{valid ray} conditions}
+		\item {\large For any \say{valid ray} found to reach the front of the lens... it made it through the pupil, and we need to max() and min() the bounding box dimensions with this new, valid sample point in rear element space... the red and green frustums here show these bounds for two different LUT entries at the center and at the periphery of the film (this particular arrangement doesn't necessarily correspond to any specific lens)}
+	\end{itemize}
 \end{itemize}
 
-% =14================================================
-\newnotepage{LUT Resolution}
-\begin{itemize}
-	\item {\large }
-\end{itemize}
-
+% =combined resolution discussion on 14 into 12======
 % =15================================================
 \newnotepage{Off to the Ra(y)ces}
+\begin{wrapfigure}{r}{0.4\textwidth}
+    \centering
+    \notegraphic{0.38\textwidth}{lens/rearelementLUTRot.png}
+\end{wrapfigure}
 \begin{itemize}
-	\item {\large }
+	\item {\large Generating ray samples at runtime}
+	\begin{itemize}
+		\item {\large The 2D bounds we just established may seem unfriendly to radial symmetry. Using a simple 2D axis-aligned bounding box in this way, defined in terms of min and max on X and Y, it may not seem immediately intuitive how this is used for anything but points on the Y axis, like those that were used to generate the bounds...}
+		\item {\large I'm very pleased with the scheme I found here - it has a minor special case at the center of the image, where you need to just use constant X and Y values, due to a zero displacement vector from the pixel to the center of the image - you just need to establish a 2D basis that encodes the rotation...}
+		\item {\large The Y component of this basis is the pixel's displacement vector from the center, normalized, and you can construct the X component very cheaply from the .yx swizzle of the Y component - you can see the blue and cyan copies using the data for the green LUT entry, by using modified basis vectors in this way}
+	\end{itemize}
 \end{itemize}
 
 % =16================================================
 \newnotepage{Discussion + Future Directions}
+\begin{wrapfigure}{r}{0.38\textwidth}
+    \centering
+    \notegraphic{0.36\textwidth}{lens/insets.png}
+\end{wrapfigure}
+\vspace{-1cm}
 \begin{itemize}
-	\item {\large }
+	\item {\large Petzval "Swirly Bokeh"}
+	\begin{itemize}
+		\item {\large I tried this just to see what would happen - it's white, diffusely emissive points on a black plane, a certain distance in front of the lens}
+		\item {\large Notice how the defocus blur creates varying distortion across the lens field - this is the "swirly" property}
+		\item {\large Unfortunately, and I believe this to be a consequence of my uniform sampling as I mentioned before, I'm not resolving the bokeh patterns quite I was expecting to see, from pictures I've seen (here from Poor Things)}
+		\item {\large I think at least part of this is from having more complex scene illumination coming into that lens, but an important aspect of the pupil sampling that is missing right now is the ability to sample nonuniform pupil radiance - due to the various distortions present in these systems, I think this is actually more the rule than the exception}
+	\end{itemize}
+	\item {\large My plan going forward is to accumulate a tally of photons for each LUT entry as a texture, spanning across the Normalized Rear Element Coords - accumulating this under uniform illumination outside the lens (with the rays traced in the opposite direction) will give me the information I need to importance sample the pupil radiance... it may even make sense to add another dimension to that table, with respect to wavelength, as this variation can also cause significant changes in ray behavior}
 \end{itemize}
+
+\newnotepage{Thanks - Questions?}
 
 \end{document}
