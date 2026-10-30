@@ -14,6 +14,8 @@
 \usepackage{amsmath}
 \usepackage{eso-pic}
 \usepackage{dirtytalk} % for \say{}
+\usepackage{tgadventor}
+
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
@@ -123,6 +125,7 @@
 % ==================================================
 \begin{document}
 
+\fontfamily{qag}\selectfont
 
 % Title page goes here
 \thispagestyle{empty}
@@ -167,19 +170,23 @@
 \clearpage
 
 % =0=================================================
-\newnotepage{What to Expect}
+\newnotepage{Agenda}
 \begin{wrapfigure}{r}{0.46\textwidth}
     \centering
+	\vspace{-0.5cm}
     \notegraphic{0.42\textwidth}{lens/fisheyesection.png}
+	\text{An example sectioned view of a fisheye lens}
 \end{wrapfigure}
 \begin{itemize}
-	\item {\large I've recently implemented a GPU-based system in Vulkan for resolving the image through a lens system using ray optics (loosely based on PBRTv3's Realistic Camera) which is capable of modelling a lot of the aberration and distortion of specific lens designs, and want to share some of my experience}
+	\item {\large I've recently implemented a system in Vulkan for resolving the image that is projected through a lens using ray optics (loosely based on PBRTv3's Realistic Camera) which is capable of modelling a lot of the aberration and distortion of specific lens designs, and want to share some of my experience}
 	\item {\large I'm going to show the output of a number of debug tools which I implemented during the process, and quickly explain some relevant optics fundamentals}
 	\item {\large I'm going to talk about the specification of a lens system, how to read the data in a lens prescription table, and how to use it to build a system like this}
-	\vspace{2cm}
+	% \vspace{1.5cm}
 	\begin{figure}[htbp]
-    \centering
-    \notegraphic{0.618\textwidth}{lens/testpatterns.png}
+	\centering
+	\notegraphic{0.618\textwidth}{lens/testpatterns.png}
+	\fontfamily{qag}\selectfont
+	\text{Some ISO 12233 test patterns rendered through different lens systems}
     \end{figure}
 \end{itemize}
 
@@ -193,12 +200,12 @@
     \item {\large Refraction happens when we transition between media of different index of refraction (IoR), $N_{\text{1}}$ and $N_{\text{2}}$}
     \begin{itemize}
         \item {\large This is a unitless property of the material, and we are just taking a ratio of the two}
-        \item {\large The ratio of these two properties is inverted, when you are going the other direction (air into glass vs glass into air)}
+        \item {\large The ratio of these two properties is inverted when you are going the other direction (air into glass vs glass into air)}
     \end{itemize}
     \item {\large We can calculate the result of the refraction in ray optics using the GLSL refract() function}
     \begin{itemize}
-        \item {\large Parameters are the surface normal, the incident ray, and the ratio of $N_{\text{1}}$ and $N_{\text{2}}$, referred to as eta}
-        \item {\large Result is the refracted ray, or a zero vector if the refraction math fails}
+        \item {\large Parameters are the surface normal n, the incident ray i, and the ratio of $N_{\text{1}}$ and $N_{\text{2}}$, referred to as eta}
+        \item {\large Result is the refracted ray r, or a zero vector if the refraction math fails}
     \end{itemize}
 \end{itemize}
 
@@ -210,7 +217,7 @@
 \end{wrapfigure}
 \begin{itemize}
     \item {\large The IoR property actually describes the propagation speed of light in that medium, relative to how fast it travels in a vacuum}
-    \item {\large This gives rise to another interpretation based on wave optics... pulses of incident energy arrive at some rate, and the bending ocurrs as a result, because they share phase at the boundary}
+    \item {\large This gives rise to another interpretation based on wave optics: pulses of incident energy arrive at some rate, and the bending ocurrs as a result, because they share phase at the boundary}
     \item {\large The specifics here are a little bit out of scope, but we can say that this is a phenomenon that changes with the rate of the pulses ariving at the interface}
     \begin{itemize}
         \item {\large \say{Rate} here refers to the frequency of the incident light - this property corresponds to its color, as it is proportionally related to the wavelength of the light by the constant speed of light C}
@@ -224,41 +231,43 @@
 
 % =3=================================================
 \newnotepage{Abbe Number and Cauchy Coefficients}
-\begin{wrapfigure}{r}{0.32\textwidth}
+\begin{wrapfigure}{r}{0.26\textwidth}
     \centering
-    \notegraphic{0.3\textwidth}{lens/abbe.png}
+	\vspace{2cm}
+    \notegraphic{0.24\textwidth}{lens/abbe.png}
     \text{Ernst Abbe (1840-1905)}
 \end{wrapfigure}
-
+\vspace{-1cm}
 \begin{itemize}
-    \item {\large It's important to have an expression for this behavior, if we want to be able to use it for a real application like an optical system - relevant for describing different types of glass, fluids, or atmospheric gasses}
+    \item {\large It's important to have an expression for this behavior if we want to be able to use it for a real application like an optical system - relevant for describing different types of glass, fluids, or atmospheric gasses}
     \item {\large Framework for describing this property came from Ernst Abbe in the mid-to-late 1800s, defining the index and Abbe number of optical glass}
     \begin{itemize}
         \item {\large These are defined at reference wavelengths of light - specific emission bands from luminous gas discharge provide a frequency reference that can be used to test a sample of a given material}
+		\item {\large A higher Abbe number corresponds to a lower amount of dispersion}
     \end{itemize}
-    \item {\large The Cauchy Eqauation is from somewhat earlier, in 1830}
+    \item {\large The Cauchy Equation is from somewhat earlier, in 1830 - this is an expression for IoR, as a function of wavelength}
     \begin{itemize}
         \item {\large The most useful expression for our use here is the two term form}
         \[
-            n(\lambda) = A + B/(\lambda^2)
+            n(\lambda) = A + \frac{B}{\lambda^2}
         \]
     \end{itemize}
 
-    \item {\large It is possible to derive the Cauchy Equation coefficients A and B corresponding to a given IoR and Abbe number, by this relation given by LuxCoreRender (using the d-, F-, and C-wavelength definitions):}
+    \item {\large It is possible to derive the Cauchy Equation coefficients A and B corresponding to a given IoR ($n_{d}$) and Abbe number ($v_{d}$), by this relation given by LuxCoreRender (using the d-, F-, and C-wavelength definitions):}
     \[
             B = \frac{ n_{d} - 1 }{ v_{d} } * \frac{ F^2 C^2 }{ C^2 - F^2 } = \frac{n_{d} - 1}{v_{d}} * 0.52
     \]
     \[
             A = n_{d} - B * 2.897      \;\;\;\;or\;\;\;\;     A = n_{e} - B * 3.354
     \]
-    \item {\large They go on to explain that the difference between the two definitions is less than 0.05\% over the visible spectrum of light, and that the difference between using Cauchy and the more math-heavy Sellmeier Equation is similarly negligible}
+    \item {\large They go on to explain that the error between the two definitions is less than 0.05\% over the visible spectra}
 \end{itemize}
 
 % =4=================================================
 \newnotepage{Abbe Diagram - The Glass Veil}
 \begin{itemize}
-    \item {\large Different chemical formulations are used to control the refractive index and dispersion of engineered glasses}
-	\item {\large You can visualize these properties on a 2D plot, which is called an Abbe Diagram, or the Glass Veil}
+    \item {\large Different chemical formulations control the refractive index and dispersion of engineered glasses}
+	\item {\large You can visualize on a 2D plot called an Abbe Diagram, or the Glass Veil}
 	\begin{figure}[htbp]
     \centering
     \notegraphic{0.8\textwidth}{lens/diagram.png}
@@ -301,8 +310,8 @@
 	\text{reference diagram in Modern Optical Engineering}
 \end{wrapfigure}
 \begin{itemize}
-	\item {\large Sectioned views like this are taking advantage of the radial symmetry of the system}
-	\item {\large A lens system consists of one or more elements, in one or more groups - these are higher level organization structures which can be interpreted from the prescription}
+	\item {\large Sectioned views take advantage of the radial symmetry of the system}
+	\item {\large A lens system comprise groups, which in turn comprise elements - these are higher level organization structures which can be interpreted from the prescription}
 	\begin{itemize}
 		\item {\large An element is a piece of glass that can be manufactured, as a building block of a system like this - the surfaces can be ground into concave, planar, or convex profiles, with spherical or aspherical curvature}
 		\item {\large A group is one or more elements grouped within the system - this can include things like cemented doublets and triplets, which are simple elements which are glued together with a material with properties such that it acts like a glass-glass interface}
@@ -313,9 +322,10 @@
 
 % =7=================================================
 \newnotepage{Segmenting into Lens Elements}
-\begin{wrapfigure}{r}{0.46\textwidth}
+\begin{wrapfigure}{r}{0.38\textwidth}
     \centering
-    \notegraphic{0.42\textwidth}{lens/fisheyecode.png}
+	\vspace{2cm}
+    \notegraphic{0.36\textwidth}{lens/fisheyecode.png}
 \end{wrapfigure}
 \begin{itemize}
 	\item {\large Iterating through the table, we're assigning boolean space occupancy to each interface in the table}
@@ -326,7 +336,7 @@
 	\begin{itemize}
 		\item {\large 00: air/air represents an aperture stop}
 		\item {\large 01: air/glass is the front side of an element}
-		\item {\large 11: glass/glass is between cemented glass elements}
+		\item {\large 11: glass/glass between cemented glass elements}
 		\item {\large 10: glass/air is the back side of an element}
 	\end{itemize}
 	\item {\large Why it matters? Building a system string like this, we can draw a better diagram now, and add cylinder geometry for the outer edge of these elements if desired}
@@ -337,6 +347,12 @@
 
 % =8=================================================
 \newnotepage{Tracing a Ray through the System}
+\begin{wrapfigure}{r}{0.46\textwidth}
+    \centering
+	\vspace{2cm}
+    \notegraphic{0.42\textwidth}{lens/sonnarmarkup.png}
+	\text{Example \say{valid} (green) and \say{invalid} (red) rays traced}
+\end{wrapfigure}
 \begin{itemize}
 	\item {\large What is a \say{valid ray}? We're using a somewhat simplified model}
 	\begin{itemize}
@@ -346,8 +362,8 @@
 			\item {\large The fact that there are no reflections is a key simplification for speed and it means that this system is not currently able to directly resolve lens flares at time of writing}
 			\item{\large I'm interested in exploring this further, in the style of one of my prior experimental forward pathtracer projects called Newton, where primary rays are emitted from light sources and would only contribute to the image if they ultimately intersect a simulated film plane}
 		\end{itemize}
-		\item {\large Passes all aperture tests, both explicit aperture stops (e.g. a bladed iris) and those defined implicitly by the semiaperture of each element}
-		\item {\large Arrives at the font surface of the front element, and is then ready to be traced against the scene}
+		\item {\large Passes all aperture tests, both explicit aperture stops (e.g. bladed iris) and those defined implicitly by the semiaperture of each element}
+		\item {\large Arrives at the front surface at far left, and is then ready to be traced against the scene}
 	\end{itemize}
 \end{itemize}
 
@@ -358,14 +374,14 @@
     \notegraphic{0.28\textwidth}{lens/pbrt3.png}
 \end{wrapfigure}
 \begin{itemize}
-	\item {\large Viewed from the film plane, a lens system has what's called an exit pupil - this is the effective aperture of the system, which admits scene radiance}
-	\item {\large In order to resolve the correct image at the film plane, you need to integrate all the radiance at the pupil - this is equivalently the incident radiance at the film plane (for our purposes)}
-	\item {\large This graphic, from Physically Based Ray Tracing v3's Realistic Cameras chapter, shows a view of the system pupil from two distinct points on the film plane}
+	\item {\large Viewed from the film plane, a lens system has what's called an exit pupil - this is the effective aperture of the system, which admits light from the scene}
+	\item {\large In order to resolve the correct image at the film plane, you need to integrate all the the light that comes through the pupil - this is equivalently the incident radiance at the film plane (for our purposes)}
+	\item {\large This graphic, from Physically Based Ray Tracing v3's Realistic Cameras chapter, shows a view of the exit pupil from two distinct points on the film plane}
 	\begin{itemize}
-		\item {\large Somewhat counterintuitively, the one which is solid orange color is \say{in focus}, as the incident radiance is uniform - we integrate, and get orange for this point on the film}
-		\item {\large The green one where the pupil sees distinct leaves will need to integrate varying frequency image contents - when we perform the integration, it constitutes a blurring, and we see this as an \say{out of focus} portion of the image}
+		\item {\large Somewhat counterintuitively, the one which is solid orange color is \say{in focus}, as the incident radiance is uniform, with those rays landing at a similar point in the scene - the result of the integration gives us orange for this point on the film}
+		\item {\large The green one where the pupil sees distinct leaves, the integration will constitute an averaging of the light from different points in the scene - in other words, it constitutes a blur, and we see this as an \say{out of focus} portion of the image}
 	\end{itemize}
-	\item {\large We need an efficient way to sample this pupil radiance - when we do this integration for all points on the film, the result is the lens image that we want to resolve}
+	\item {\large We need an efficient way to sample this pupil radiance - when we do this integration for each points on the film, the result is the lens image that we want to resolve}
 \end{itemize}
 
 % =10================================================
@@ -380,9 +396,8 @@
 	\item {\large Some sampling strategies, motivating our approach:}
 	\begin{itemize}
 		\item {\large Hemisphere Sampling - generate random directions in the hemisphere normal to the film plane... this can be $<$1\% efficiency, with very few rays making it the exit pupil... we can do better}
-		\item {\large Rear Element Sampling - generating random directions based on the vector from the flim plane to random points generated on the rearmost element of the system... this is more efficient than hemisphere sampling, and it is a much more efficient starting point}
+		\item {\large Rear Element Sampling - generating random directions based on the vector from the flim plane to random points generated on the rearmost element of the system... this is a more efficient starting point than hemisphere sampling}
 		\item {\large Pupil Sampling - if we can, for example, put a bounding box around the exit pupil, and generate uniform samples in that box... it's a good starting point for sampling the image, and the rate of successful rays generated this way is approximately the ratio of the areas of a circle inside a square, $\frac{\pi}{4}$}
-		\item {\large Importance Sampling of Pupil Radiance - this is still in the works in my pathtracer, Phoenix, but if we can accumulate some LUT of the pupil's radiance distribution, it will be able to resolve both a more efficient and a much more correct result... more about this in the discussion section at the end}
 	\end{itemize}
 \end{itemize}
 
@@ -400,7 +415,7 @@
 		\item {\large In a light-sealed system (like most cameras), this is the aperture through which all light incident at the film plane must pass}
 		\item {\large Another way to say this - we will never recieve any light from any direction besides one which originates inside this rear element aperture}
 	\end{itemize}
-	\item {\large This defines our problem... we can place a plane at the Z-axis location of the rear element, and on that plane, define a normalized space that spans -1 to 1 across the rear element aperture - I call this \say{Normalized Rear Element Coordinates}}
+	\item {\large This defines our problem: we can place a plane at the Z-axis location of the rear element, and on that plane, define a normalized space that spans -1 to 1 across the rear element aperture - I call this \say{Normalized Rear Element Coordinates}}
 	\item {\large Great! Now we have a simple, scale-invariant 2D space to work in (we don't care about changes to the lens parameters, if we need to convert to points in 3D space, we'll just reference the current parameters for the rear element of the system)}
 \end{itemize}
 
@@ -463,14 +478,14 @@
 \end{wrapfigure}
 \vspace{-1cm}
 \begin{itemize}
-	\item {\large Petzval "Swirly Bokeh"}
+	\item {\large Petzval \say{Swirly Bokeh}}
 	\begin{itemize}
 		\item {\large I tried this just to see what would happen - it's white, diffusely emissive points on a black plane, a certain distance in front of the lens}
 		\item {\large Notice how the defocus blur creates varying distortion across the lens field - this is the "swirly" property}
-		\item {\large Unfortunately, and I believe this to be a consequence of my uniform sampling as I mentioned before, I'm not resolving the bokeh patterns quite I was expecting to see, from pictures I've seen (here from Poor Things)}
+		\item {\large Unfortunately, and I believe this to be a consequence of my uniform sampling as I mentioned before, I'm not resolving the bokeh patterns quite like I was expecting to see, from pictures I've seen (here from Poor Things)}
 		\item {\large I think at least part of this is from having more complex scene illumination coming into that lens, but an important aspect of the pupil sampling that is missing right now is the ability to sample nonuniform pupil radiance - due to the various distortions present in these systems, I think this is actually more the rule than the exception}
 	\end{itemize}
-	\item {\large My plan going forward is to accumulate a tally of photons for each LUT entry as a texture, spanning across the Normalized Rear Element Coords - accumulating this under uniform illumination outside the lens (with the rays traced in the opposite direction) will give me the information I need to importance sample the pupil radiance... it may even make sense to add another dimension to that table, with respect to wavelength, as this variation can also cause significant changes in ray behavior}
+	\item {\large My plan going forward is to change the precompute step to accumulate a brightness PDF for each LUT entry as a texture, spanning across the Normalized Rear Element Coords - accumulating this under uniform illumination outside the lens (with the rays traced in the opposite direction) will give me the information I need to build an iCDF to importance sample the pupil radiance}
 \end{itemize}
 
 \newnotepage{Thanks - Questions?}
